@@ -1,9 +1,13 @@
 package org.example;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Arrays;
+
+import com.google.gson.Gson;
 import org.json.JSONObject;
 
 public class Main {
@@ -11,7 +15,7 @@ public class Main {
 
         String apiKey = "fca_live_qT7RMJEks2JSVWY0Yr6FocSutQpQMOoIt3MPUci5";
         String baseUrl = "https://api.freecurrencyapi.com/v1/latest";
-        String queryParams = "?apikey=" + apiKey + "&base_currency=USD";
+        String queryParams = "?apikey=" + apiKey + "&base_currency=KRW";
 
 
         HttpClient client = HttpClient.newHttpClient();
@@ -25,6 +29,11 @@ public class Main {
         System.out.println("Response body: " + response.body());
 
         JSONObject jsonResponse = new JSONObject(response.body());
-        System.out.println("EUR: " + jsonResponse.getJSONObject("data").getDouble("EUR"));
+
+        ExchangeRate rate;
+        Gson gson = new Gson();
+        rate = gson.fromJson(jsonResponse.getJSONObject("data").toString(), ExchangeRate.class);
+
+        System.out.println("USD: " + rate.getUSD() * 1000);
     }
 }
